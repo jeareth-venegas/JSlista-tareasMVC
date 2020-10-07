@@ -1,24 +1,31 @@
 //LISTA DE TAREAS
 
-
-//29 sept 2020
-
 //
 //MODELO
 //
 
+
+//se añade un contador de tareas para asignar un id único a cada tarea
+let contador = 0;
 //lista de tareas (array)
 let tareas = []
 const datosLocalStorage = localStorage.getItem('tareas');
 
-if(datosLocalStorage !== null){
+if(datosLocalStorage){
     tareas = JSON.parse(datosLocalStorage);
 }
 
+// Se lee el contador de tareas del localStorage.
+const contadorLocalStorage = localStorage.getItem('contador');
+console.log(contadorLocalStorage);
 
-//se añade un contador de tareas para asignar un id único a cada tarea
-let contador = 0;
+console.log(tareas);
 
+if (contadorLocalStorage) {
+    contador = parseInt(contadorLocalStorage);
+}
+
+// addTarea(): Agrega una tarea en la lista.
 function addTarea(nombreTarea, fechaTarea, completoTarea){
     //crea objeto que crea una nueva tarea
 
@@ -39,12 +46,9 @@ function addTarea(nombreTarea, fechaTarea, completoTarea){
 
     localStorage.setItem('tareas', JSON.stringify(tareas));
 
-    console.log(tareas);
-
 // localStorage no almacena objetos complejos
 //solo numeros y strings
 //localStorage.setItem('tareas', tareas); hay que pasar el tareas  a un string. "serializar" con json
-
 }
 
 //
@@ -72,14 +76,40 @@ function appendTaskDOM(tarea){
     label.setAttribute('for',`tarea-${tarea.id}`);
     label.innerHTML = `${tarea.nombre} - ${tarea.fecha}`;
 
+//----- FUNCION DELETE -----//
+    const buttonDelete = document.createElement('button');
+    buttonDelete.className = 'task-list__delete';
+    buttonDelete.setAttribute('id', `delete-${tarea.id}`);
+    buttonDelete.innerHTML = 'Borrar';
+
+
+    let taskList = document.getElementById('taks-list');
+    let trash = getElementByName(buttonDelete);
+
+    for (let i = 0; i < taskList.children.length; i++) {
+        trash[i].addEventListener('click', function(){
+            let taskList = document.getElementById('taks-list');
+            taskList.removeChild(list.childNodes[0]);
+        });
+    }
+
+    //let trash = getElementByName(buttonDelete);
+
+    //for(let i = 0; trash.length; i++){
+    //    trash[i].addEventListener('click', function())
+    //}
+
+//----------
 
     //meter el label, input al li
 
     item.appendChild(checkbox);
     item.appendChild(label);
+    item.appendChild(buttonDelete);
     lista.appendChild(item);
 }
 
+// Inicialización de la lista del DOM, a partir de las tareas existentes.
 for (let i = 0; i < tareas.length; i++){
     appendTaskDOM(tareas[i]);
 }
@@ -99,11 +129,12 @@ formulario.addEventListener('submit',(event)=> {
 
     event.preventDefault(); //evita que la pagina se refresque sin que se llene el formulario
 
-//Agregs nuevo ítem(modelo)
+//Agrega nuevo ítem(modelo)
     const tarea = addTarea(formulario.elements[0].value, formulario.elements[1].value, false);
     
     
     //resetear el formulario
     formulario.elements[0].value = '';
+    formulario.elements[1].value = '';
 })
 
