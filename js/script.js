@@ -50,7 +50,7 @@ function addTarea(nombreTarea, fechaTarea, completoTarea){
 //solo numeros y strings
 //localStorage.setItem('tareas', tareas); hay que pasar el tareas  a un string. "serializar" con json
 
-function taskStatus (taskId, status){
+    function taskStatus (taskId, status){
 
         for (let i = 0; i < tareas.length; i++){
             if (tareas[i].id === taskId){
@@ -60,9 +60,17 @@ function taskStatus (taskId, status){
                 //se sale y deja de buscar en el lazo
             }
         }
-        console.log(tareas);
     }
 
+
+    function deleteTask (taskId){
+        for (let i = 0; i < tareas.length; i++){
+            if (tareas[i].id === taskId){
+                tareas.splice(i, 1);
+                break;
+            }
+        }
+    }
 }
 
 //
@@ -90,31 +98,6 @@ function appendTaskDOM(tarea){
     label.setAttribute('for',`tarea-${tarea.id}`);
     label.innerHTML = `${tarea.nombre} - ${tarea.fecha}`;
 
-//----- FUNCION DELETE -----//
-//    const buttonDelete = document.createElement('button');
-//    buttonDelete.className = 'task-list__delete';
-//    buttonDelete.setAttribute('id', `delete-${tarea.id}`);
-//    buttonDelete.innerHTML = 'Borrar';
-
-
-//    let taskList = document.getElementById('taks-list');
-//    let trash = getElementByName(buttonDelete);
-
-//    for (let i = 0; i < taskList.children.length; i++) {
-//        trash[i].addEventListener('click', function(){
-//            let taskList = document.getElementById('taks-list');
-//            taskList.removeChild(list.childNodes[0]);
-//        });
-//    }
-
-    //let trash = getElementByName(buttonDelete);
-
-    //for(let i = 0; trash.length; i++){
-    //    trash[i].addEventListener('click', function())
-    //}
-
-//----------
-
     //meter el label, input al li
 
     item.appendChild(checkbox);
@@ -132,6 +115,19 @@ function appendTaskDOM(tarea){
     taskStatus(id, complete);
     });
 }
+
+
+    //MANEJADOR DE EVENTOS PARA DELETE-----
+
+    buttonDelete.addEventListener('click',(event)=>{
+        const idDom =event.currentTarget.getAttribute('id');
+        console.log(idDom);
+        const id = parseInt(idDom.substring(7));
+        console.log(id);
+        deleteTask(id);
+        event.currentTarget.parentNode.remove();
+    })
+
 
 // Inicialización de la lista del DOM, a partir de las tareas existentes.
 for (let i = 0; i < tareas.length; i++){
