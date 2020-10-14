@@ -52,3 +52,8 @@ body {
     width: 12px;
     height: 16px;
 }
+
+.task-list_item input[type="checkbox"]:checked + label{
+    text-decoration: line-through;
+    color: #999;
+}

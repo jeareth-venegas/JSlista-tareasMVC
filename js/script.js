@@ -49,6 +49,20 @@ function addTarea(nombreTarea, fechaTarea, completoTarea){
 // localStorage no almacena objetos complejos
 //solo numeros y strings
 //localStorage.setItem('tareas', tareas); hay que pasar el tareas  a un string. "serializar" con json
+
+function taskStatus (taskId, status){
+
+        for (let i = 0; i < tareas.length; i++){
+            if (tareas[i].id === taskId){
+                tareas[i].completo = status;
+
+                break; //funciona en lazos: while y for. Hasta que se encuentra algo 
+                //se sale y deja de buscar en el lazo
+            }
+        }
+        console.log(tareas);
+    }
+
 }
 
 //
@@ -69,7 +83,7 @@ function appendTaskDOM(tarea){
     const checkbox = document.createElement('input');
     checkbox.setAttribute('type','checkbox');
     checkbox.setAttribute('id',`tarea-${tarea.id}`);
-    
+    checkbox.checked = tarea.completo;
     //se añade el elemento label
 
     const label = document.createElement('label');
@@ -77,21 +91,21 @@ function appendTaskDOM(tarea){
     label.innerHTML = `${tarea.nombre} - ${tarea.fecha}`;
 
 //----- FUNCION DELETE -----//
-    const buttonDelete = document.createElement('button');
-    buttonDelete.className = 'task-list__delete';
-    buttonDelete.setAttribute('id', `delete-${tarea.id}`);
-    buttonDelete.innerHTML = 'Borrar';
+//    const buttonDelete = document.createElement('button');
+//    buttonDelete.className = 'task-list__delete';
+//    buttonDelete.setAttribute('id', `delete-${tarea.id}`);
+//    buttonDelete.innerHTML = 'Borrar';
 
 
-    let taskList = document.getElementById('taks-list');
-    let trash = getElementByName(buttonDelete);
+//    let taskList = document.getElementById('taks-list');
+//    let trash = getElementByName(buttonDelete);
 
-    for (let i = 0; i < taskList.children.length; i++) {
-        trash[i].addEventListener('click', function(){
-            let taskList = document.getElementById('taks-list');
-            taskList.removeChild(list.childNodes[0]);
-        });
-    }
+//    for (let i = 0; i < taskList.children.length; i++) {
+//        trash[i].addEventListener('click', function(){
+//            let taskList = document.getElementById('taks-list');
+//            taskList.removeChild(list.childNodes[0]);
+//        });
+//    }
 
     //let trash = getElementByName(buttonDelete);
 
@@ -107,6 +121,16 @@ function appendTaskDOM(tarea){
     item.appendChild(label);
     item.appendChild(buttonDelete);
     lista.appendChild(item);
+
+    //MANEJADOR DE EVENTOS PARA CHECKBOX
+
+    checkbox.addEventListener('click',(event)=>{
+    const complete = event.currentTarget.checked;
+    const idDom =event.currentTarget.getAttribute('id');
+    const id = parseInt(idDom.substring(6));
+    console.log(id);
+    taskStatus(id, complete);
+    });
 }
 
 // Inicialización de la lista del DOM, a partir de las tareas existentes.
